@@ -7,18 +7,34 @@ from functools import reduce
 
 global data
 
-class Conversation(json_file):
-    def __init__(self, json_file):
-        json_data = load_file(json_file)
+class Conversation():
+    def __init__(self,file_path):
+        json_data = load_file(file_path)
         self.participant_names = get_names(json_data)
         self.messages = get_messages(json_data)
         self.messages_for_participant = get_messages_for_participant(self.messages, self.participant_names)
 
+    def get_number_of_messages_per_participant(self):
+        messages_for_participant_temp = self.messages_for_participant.copy()
+        for participant in messages_for_participant_temp.keys():
+            messages_for_participant_temp[participant] = len(messages_for_participant_temp[participant])
+        return messages_for_participant_temp
+    
+    def get_number_of_chars_per_participant(self):
+        messages_for_participant_temp = self.messages_for_participant.copy()
+        for participant in messages_for_participant_temp.keys():
+           # print('DEBUG', messages_for_participant_temp)
+            messages_for_participant_temp[participant] = get_number_of_chars(messages_for_participant_temp[participant])
+        return messages_for_participant_temp
+
+    
 
 def main():
     if(len(sys.argv) != 2):
         print('Wrong number of arguments')
         return
+
+   
     # json_data = load_file(sys.argv[1])
     # messages_per_participant(json_data)
     # messages_per_day(json_data)
@@ -28,6 +44,10 @@ def main():
     for key in conversation.messages_for_participant.keys():
         print(key, len(conversation.messages_for_participant[key]))
         print(key, get_number_of_chars(conversation.messages_for_participant[key]))
+    
+    print(conversation.get_number_of_chars_per_participant())
+
+    
    
 
 def get_number_of_chars(messages):
@@ -35,6 +55,8 @@ def get_number_of_chars(messages):
     for message in messages:
         counter += len(message)
     return counter
+
+
 
 def get_messages_for_participant(messages, participant_names):
     messages_for_participant = {}
@@ -44,6 +66,9 @@ def get_messages_for_participant(messages, participant_names):
         else:
             messages_for_participant[message['sender_name']] = [message]
     return messages_for_participant
+
+#(participant, messages[])
+
 
 def get_messages(json_data):
     return json_data['messages']
@@ -74,7 +99,7 @@ def parse_obj(obj):
                             category_children[value] = category_children[value].encode('latin_1').decode('utf-8')
     return obj
 
-# DEPRECATED
+# DEPRECATED --------------------------------------------------------------------------------------------------------------------------------
 def messages_per_participant(json_data):
     names = get_names(json_data)
     print('--- number of messages ---')
