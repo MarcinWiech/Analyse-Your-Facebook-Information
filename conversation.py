@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 import sys
 from datetime import datetime
@@ -12,6 +13,7 @@ class Conversation():
         json_data = load_file(file_path)
         self.participant_names = get_names(json_data)
         self.messages = get_messages(json_data)
+        self.msgs_num = len(self.messages)
         self.messages_for_participant = get_messages_for_participant(self.messages, self.participant_names)
 
     def get_number_of_messages_per_participant(self):
@@ -27,7 +29,23 @@ class Conversation():
             messages_for_participant_temp[participant] = get_number_of_chars(messages_for_participant_temp[participant])
         return messages_for_participant_temp
 
-    
+    def get_owners_contribution(self):
+        try:
+            owner = self.participant_names[1]
+            self.messages_for_participant[owner]
+        except:
+            return 0
+        
+        owners_chars = get_number_of_chars(self.messages_for_participant[owner])
+        owners_msgs = len(self.messages_for_participant[owner])
+        rest_chars = 0
+        rest_msgs = 0
+        for participant_name in self.messages_for_participant:
+            if participant_name != owner:
+                rest_chars += get_number_of_chars(self.messages_for_participant[participant_name])
+                rest_msgs += len(self.messages_for_participant[participant_name])
+        contribution = (((owners_chars/(owners_chars+rest_chars)) + (owners_msgs/(owners_msgs+rest_msgs)))/2)*100
+        return "{0:.0f}".format(contribution) +"%"
 
 def main():
     if(len(sys.argv) != 2):
@@ -47,16 +65,11 @@ def main():
     
     print(conversation.get_number_of_chars_per_participant())
 
-    
-   
-
 def get_number_of_chars(messages):
     counter = 0
     for message in messages:
         counter += len(message)
     return counter
-
-
 
 def get_messages_for_participant(messages, participant_names):
     messages_for_participant = {}

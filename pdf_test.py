@@ -4,43 +4,55 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
- 
-doc = SimpleDocTemplate("Facebook Analysis.pdf",pagesize=letter,
-                        rightMargin=72,leftMargin=72,
-                        topMargin=72,bottomMargin=18)
-Story=[]
-first_name = "Marcin"
- 
-formatted_time = time.ctime()
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
-convs = [('Person one', (52005, [('Person one', 29127), ('Owner', 22878)], [('Person one', 116645), ('Owner', 91674)])),
-('Person two', (39369, [('Person two', 20481), ('Owner', 18888)], [('Person two', 82124), ('Owner', 75740)])),
-('Person three', (12664, [('Owner', 6389), ('Person three', 6275)], [('Owner', 25625), ('Person three', 25264)])),
-('Person four', (12595, [('Person four', 6871), ('Owner', 5724)], [('Person four', 27538), ('Owner', 22918)]))]
- 
+from conversation_util import Table_One_Object
 
- 
-styles=getSampleStyleSheet()
-styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
-styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER))
 
-# Add header
-ptext = '<font size=16>%s\'s Document</font>' % first_name
-Story.append(Paragraph(ptext, styles["Center"]))
+class Document():
+    
+    def render_document(self, owner, table_one_objects):
 
-# Add space
-Story.append(Spacer(1, inch))
- 
-# Top friends
-ptext = '<font size=12>Top friends:</font>'
-Story.append(Paragraph(ptext, styles["Normal"]))
+        doc = SimpleDocTemplate("Facebook Analysis.pdf",pagesize=letter,
+                                rightMargin=72,leftMargin=72,
+                                topMargin=72,bottomMargin=18)
+        Story=[]
+        first_name = "Marcin"
+        
+        formatted_time = time.ctime()
 
-# Add space
-Story.append(Spacer(1, 5))
+        convs = [('Person one', (52005, [('Person one', 29127), ('Owner', 22878)], [('Person one', 116645), ('Owner', 91674)])),
+        ('Person two', (39369, [('Person two', 20481), ('Owner', 18888)], [('Person two', 82124), ('Owner', 75740)])),
+        ('Person three', (12664, [('Owner', 6389), ('Person three', 6275)], [('Owner', 25625), ('Person three', 25264)])),
+        ('Person four', (12595, [('Person four', 6871), ('Owner', 5724)], [('Person four', 27538), ('Owner', 22918)]))]
+        
+        pdfmetrics.registerFont(TTFont('Roboto-Light', 'Roboto-Light.ttf'))
+        
+        
+        styles=getSampleStyleSheet()
+        styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
+        styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER, fontName='Roboto-Light'))
+        styles.add(ParagraphStyle(name='Normal_Mine', fontName='Roboto-Light'))
 
-# Print conversation numbers
-for conv in convs:
-    ptext = '<font size=12>%s : %s</font>' % (conv[0], conv[1][0])
-    Story.append(Paragraph(ptext, styles["Normal"]))   
+        # Add header
+        ptext = '<font size=16>%s\'s Document</font>' % first_name
+        Story.append(Paragraph(ptext, styles["Center"]))
 
-doc.build(Story)
+        # Add space
+        Story.append(Spacer(1, 20))
+        
+        # Top friends
+        ptext = '<font size=12>Top conversations:</font>'
+        Story.append(Paragraph(ptext, styles["Normal_Mine"]))
+
+        # Add space
+        Story.append(Spacer(1, 5))
+
+        # Print conversation numbers
+        for idx, table_one_object in enumerate(table_one_objects):
+            Story.append(Spacer(1, 3))
+            ptext = '<font size=12>%s. %s - %s - %s</font>' % (idx+1, table_one_object.participant_name, table_one_object.number_of_mssgs, table_one_object.owners_contribution)
+            Story.append(Paragraph(ptext, styles["Normal_Mine"]))   
+
+        doc.build(Story)
