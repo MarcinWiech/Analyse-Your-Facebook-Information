@@ -1,7 +1,7 @@
 import os, fnmatch, operator
 from collections import OrderedDict
-from conversation import Conversation
-from conversation_util import *
+from src.conversation import Conversation
+from src.conversation_util import get_message_number_per_conversation 
 
 def get_all_conversations(root_dir_path):
     filepaths = find("message_1.json", root_dir_path)

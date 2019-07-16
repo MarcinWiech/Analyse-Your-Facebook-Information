@@ -1,9 +1,9 @@
 import sys
 
-from file_crawler import get_all_conversations
-from conversation import Conversation
-from conversation_util import *
-from generate_pdf import Document
+from src.file_crawler import get_all_conversations
+from src.conversation import Conversation
+from src.conversation_util import get_table_one_objects
+from src.generate_pdf import Document
 
 def main():
 

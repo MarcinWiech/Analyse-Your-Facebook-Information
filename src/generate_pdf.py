@@ -9,7 +9,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.fonts import addMapping
 import locale
 
-from conversation_util import Table_One_Object
+from src.conversation_util import Table_One_Object
 
 
 class Document():
