@@ -14,10 +14,10 @@ from src.conversation_util import Table_One_Object
 
 class Document():
     
-    def render_document(self, owner, table_one_objects):
+    def render_document(self, path, owner, table_one_objects):
         
         # Create doc from Template
-        doc = SimpleDocTemplate("Facebook Analysis.pdf",pagesize=letter,
+        doc = SimpleDocTemplate(path + "/Facebook Analysis.pdf",pagesize=letter,
                                 rightMargin=72,leftMargin=72,
                                 topMargin=72,bottomMargin=72)
         Story=[]
@@ -44,6 +44,10 @@ class Document():
         styles.add(ParagraphStyle(name='Normal_Mine', fontName='Roboto-Regular'))
         styles.add(ParagraphStyle(name='Table_Centre', fontName='Roboto-Light',fontSize=10,leading=12,spaceBefore=6, alignment=TA_CENTER))
         styles.add(ParagraphStyle(name='Table', fontName='Roboto-Regular',fontSize=10,leading=12,spaceBefore=6))
+
+        # Add time
+        ptext = '<font size=9>%s</font>' % formatted_time
+        Story.append(Paragraph(ptext, styles["Table"]))
 
         # Add header
         ptext = '<font size=16>%s\'s Document</font>' % first_name
