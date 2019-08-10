@@ -16,7 +16,7 @@ def main(face_dir_path, save_doc_path):
     table_objects = get_table_one_objects(conversations)
     
     document = Document()
-    document.render_document(save_doc_path ,"Marcin", table_objects)   
+    document.render_document(save_doc_path ,"Name", table_objects)
     
     print("FINISHED")
 
