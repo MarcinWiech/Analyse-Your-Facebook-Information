@@ -19,7 +19,7 @@ pip3 install appjar
 
 ### Example report
 
-![picture alt](http://oi65.tinypic.com/35i9gch.jpg "Example report first page")
+![picture alt]("Example report first page")
 
 ### Contributing
 
