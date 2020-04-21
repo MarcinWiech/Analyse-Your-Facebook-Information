@@ -24,7 +24,6 @@ def find(pattern, path):
                 result.append(os.path.join(root, name))
     return result
 
-#/home/marcin/Projects/Facebook_analysis
 def main():
     files = find("message_1.json", '/home/marcin/Projects/Facebook_analysis/messages/inbox/')     
     print(len(files))
