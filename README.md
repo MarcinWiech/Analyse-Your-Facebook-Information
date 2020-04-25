@@ -17,10 +17,6 @@ pip3 install appjar
 ./Facebook_Analyzer.sh
 ```
 
-### Example report
-
-![picture alt]("Example report first page")
-
 ### Contributing
 
 * Analyse likes
